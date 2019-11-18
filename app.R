@@ -1,7 +1,7 @@
 library(shiny)
 library(shinythemes)
 
-source("20191117_D.R")
+source("mapcode.R")
 
 page_one <- tabPanel(
     "First Page", # label for the tab in the navbar
@@ -15,6 +15,12 @@ page_two <- tabPanel(
 page_three <- tabPanel(
     "Third Page",
     titlePanel("Heroin-Related Overdose Deaths"),
+    selectInput("category", "Category:",
+                c("decrease" = "decrease",
+                  "did not meet inclusion criteria" = "did not meet inclusion criteria",
+                  "increase" = "increase",
+                  "stable - not significant" = "stable - not significant"
+                )),
     leafletOutput("mymap")
 )
 
@@ -34,7 +40,7 @@ ui <- navbarPage(
 
 server <- function(input, output) {
     output$mymap <- renderLeaflet({my_map <- leaflet(states) %>%
-        setView(-96, 37.8, 4) %>%
+        setView(-100, 40, 4) %>%
         addProviderTiles("MapBox", options = providerTileOptions(
             id = "mapbox.light",
             accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN'))) %>%
@@ -51,16 +57,22 @@ server <- function(input, output) {
                 dashArray = "",
                 fillOpacity = 0.7,
                 bringToFront = TRUE),
-            label = labels,
-            labelOptions = labelOptions(
-                style = list("font-weight" = "normal", padding = "3px 8px"),
-                textsize = "15px",
-                direction = "auto")) %>%
+            label = labels) %>%
         addLegend(
             pal = pal,
             values = ~category, opacity = 0.7, title = NULL,
             position = "bottomright")})
     
+    proxy <- leafletProxy("mymap")
+    
+    observe({
+        if(input$category != ""){
+            selected_polygon <- subset(states, states$category==input$category)
+            proxy %>% clearGroup("highlighted_polygon")
+            proxy %>% addPolylines(stroke=TRUE, weight = 4, color="red",
+                                   data=selected_polygon, group="highlighted_polygon")
+        }
+    })
 }
 
 
