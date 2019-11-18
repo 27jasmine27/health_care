@@ -57,7 +57,11 @@ my_map <- leaflet(states) %>%
       dashArray = "",
       fillOpacity = 0.7,
       bringToFront = TRUE),
-    label = labels) %>%
+    label = labels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>%
   addLegend(
     pal = pal,
     values = ~category, opacity = 0.7, title = NULL,

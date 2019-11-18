@@ -15,14 +15,18 @@ page_two <- tabPanel(
 page_three <- tabPanel(
     "Third Page",
     titlePanel("Heroin-Related Overdose Deaths"),
-    selectInput("category", "Category:",
+    sidebarLayout(
+        sidebarPanel(
+        selectInput("category", "Category:",
                 c("decrease" = "decrease",
                   "did not meet inclusion criteria" = "did not meet inclusion criteria",
                   "increase" = "increase",
                   "stable - not significant" = "stable - not significant"
-                )),
+                ))
+        ),
+    mainPanel(
     leafletOutput("mymap")
-)
+)))
 
 page_four <- navbarMenu("More",
                         tabPanel("Q&A"),
@@ -57,7 +61,11 @@ server <- function(input, output) {
                 dashArray = "",
                 fillOpacity = 0.7,
                 bringToFront = TRUE),
-            label = labels) %>%
+            label = labels,
+            labelOptions = labelOptions(
+                style = list("font-weight" = "normal", padding = "3px 8px"),
+                textsize = "15px",
+                direction = "auto")) %>%
         addLegend(
             pal = pal,
             values = ~category, opacity = 0.7, title = NULL,
