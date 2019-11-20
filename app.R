@@ -2,6 +2,8 @@ library(shiny)
 library(shinythemes)
 library(ggplot2)
 
+data <- read.csv("data/drug_induced_deaths_1999-2015.csv", stringsAsFactors = FALSE)
+
 source("overdose_map.R")
 source("death_mapcode.R")
 
@@ -10,7 +12,17 @@ homepage <- tabPanel(
 )
 
 page_one <- tabPanel(
-    "First Page"
+    "First Page",
+    titlePanel("Deaths by Drugs in 1999-2015"),
+    sidebarLayout(
+        sidebarPanel(
+            selectizeInput("?..State", 
+                           label = "State:", 
+                           choices = data$State)),
+        
+        mainPanel(
+            plotOutput("trendPlot"))
+    )
 )
 
 page_two <- tabPanel(
@@ -80,6 +92,10 @@ ui <- navbarPage(
 )
 
 server <- function(input, output) {
+    output$trendPlot <- renderPlot({
+        ggplot(data = data) +
+            geom_point(mapping = aes(x = Year, y = Deaths))
+    })
     
     output$overdose_map <- renderPlotly({
         plot_geo(data = overdose_age_groups) %>%
