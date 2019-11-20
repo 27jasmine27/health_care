@@ -1,0 +1,12 @@
+name: drug_usage
+title: drug_usage
+username:
+account: jessjx
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1498404
+bundleId: 2602927
+url: https://jessjx.shinyapps.io/drug_usage/
+when: 1574229184.65407
+asMultiple: FALSE
+asStatic: FALSE

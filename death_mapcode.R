@@ -3,7 +3,7 @@ library(ggplot2)
 library(leaflet)
 
 data <- read.csv(
-  'Statistically significant changes in drug overdose death rates involving heroin by select states, United States, 2016 to 2017.csv', 
+  "data/drug_overdose_death_rates.csv", 
   stringsAsFactors = FALSE, na.strings = 'n/a'
 )
 
