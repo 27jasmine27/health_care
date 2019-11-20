@@ -1,14 +1,14 @@
 library(shiny)
 library(ggplot2)
-data1 <- read.csv("data/drug_induced_deaths_1999-2015.csv", stringsAsFactors = FALSE)
+data <- read.csv("data/drug_induced_deaths_1999-2015.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   titlePanel("Deaths by Drugs in 1999-2015"),
     sidebarLayout(
       sidebarPanel(
-        selectizeInput("?..State", 
+        selectizeInput("ï..State", 
                        label = "State:", 
-                       choices = data1$State)),
+                       choices = data$State))
       
     mainPanel(
       plotOutput("trendPlot"))
@@ -17,10 +17,11 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$trendPlot <- renderPlot({
-    #df <- data1[data1$State == input$State, ]
-    trendPlot <- ggplot(data1) +
-      geom_point(mapping = aes(x = Year, y = Deaths)) +
-    labs(x = "Year", y = "Ideology")
+    df <- data[data$ï..State == input$State,]
+    ggplot(df) +
+      geom_point(mapping = aes(x = Year, y = Deaths)),
+    xlab = "Year"
+    ylab = "Deaths"
   })
 }
 
