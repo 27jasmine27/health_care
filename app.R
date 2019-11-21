@@ -8,11 +8,29 @@ source("overdose_map.R")
 source("death_mapcode.R")
 
 homepage <- tabPanel(
-    "Overview"
+    "Overview",
+    mainPanel(
+        h3(class = "title", "Overview"),
+        p("Our Shiny application was built in R Studio and contains 
+        the major components used to create the variety of visualizations 
+        used to help us answer our research questions."),
+        p("To begin, we used a heat map to show the extent of heroin overdoses 
+        in different states, with color to show the amount of people, frequency, 
+        and age. This is particularly useful because it gives a visual aid as 
+        to where and what groups of people are in most need of help."),
+        p("Secondly, the next visualization we used was a bar chart. 
+        This varied from the heat map because it highlights the various ages 
+        of heroin users across the nation. Being able to change the view based 
+        on specific age groups allows the user to see the true and unobscured data,
+        whereas the heat map shows the depth and severity of the problem. "),
+        p("Lastly, the other map that we used highlights the change in deaths from 
+          2016 until now. This is useful because it highlights the severity and 
+          growing issue that needs attention and changes to legislation. ")
+        )
 )
 
 page_one <- tabPanel(
-    "First Page",
+    "Numbers of Deaths",
     titlePanel("Deaths by Drugs in 1999-2015"),
     sidebarLayout(
         sidebarPanel(
@@ -26,7 +44,7 @@ page_one <- tabPanel(
 )
 
 page_two <- tabPanel(
-    "Second Page",
+    "Opiod Overdoses by Age Group",
     titlePanel("Overdose Map"),
     sidebarLayout(
         sidebarPanel(
@@ -46,8 +64,8 @@ page_two <- tabPanel(
 )
 
 page_three <- tabPanel(
-    "Third Page",
-    titlePanel("Heroin-Related Overdose Deaths"),
+    "Death Change Rate Map",
+    titlePanel("Heroin-Related Overdose Deaths 2016-2017"),
     sidebarLayout(
         sidebarPanel(
         selectInput("category", "Category:",
@@ -85,17 +103,19 @@ ui <- navbarPage(
     theme = shinytheme("yeti"),
     "Drug Usage",
     homepage,
-    page_one,
     page_two,
+    page_one,
     page_three,
     page_four
 )
 
 server <- function(input, output) {
     output$trendPlot <- renderPlot({
+        df <- data[data$ï..State == input$state, ]
         ggplot(data = data) +
             geom_point(mapping = aes(x = Year, y = Deaths))
     })
+    
     
     output$overdose_map <- renderPlotly({
         plot_geo(data = overdose_age_groups) %>%
