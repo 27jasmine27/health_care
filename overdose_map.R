@@ -15,26 +15,21 @@ colnames(overdose_age_groups) <- c(
   "Ages 55+",
   "Total"
 )
-overdose_age_groups[overdose_age_groups == "NSD"] <- NaN
+overdose_age_groups[overdose_age_groups == "NSD"] <- "No sufficient data"
 overdose_age_groups <- filter(overdose_age_groups, Location != "United States")
 state_codes <- lapply(overdose_age_groups$Location, state2abbr)
 overdose_age_groups$Location <- state_codes
 
-plot_geo(data = overdose_age_groups) %>%
-  add_trace(
-    z = ~overdose_age_groups[["Ages 55+"]],
-    locations = ~Location,
-    locationmode = "USA-states",
-    color = ~Total
-  ) %>%
-  colorbar(title = "Overdoses") %>%
-  layout(
-    geo = list(scope = "usa"),
-    title = paste0("Opiod Overdoses in 2017 by State (", "Ages 55+", ")"),
-    annotations = list(
-      text = "*White states do not have sufficient data for this age group",
-      x = 1.1,
-      y = -0.1,
-      showarrow = FALSE
-      )
-  )
+# map code test
+# plot_geo(data = overdose_age_groups) %>%
+#   add_trace(
+#     z = ~overdose_age_groups[["Ages 55+"]],
+#     locations = ~Location,
+#     locationmode = "USA-states",
+#     color = ~Total
+#   ) %>%
+#   colorbar(title = "Overdoses") %>%
+#   layout(
+#     geo = list(scope = "usa"),
+#     title = paste0("Opiod Overdoses in 2017 by State (", "Ages 55+", ")")
+#   )

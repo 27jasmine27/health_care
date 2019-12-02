@@ -8,6 +8,7 @@ data <- read.csv(
 )
 
 data <- data[, 1:8]
+colnames(data)[1] <- "state"
 
 states <- geojsonio::geojson_read("us-states.geojson", what = "sp")
 

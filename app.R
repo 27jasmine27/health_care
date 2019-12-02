@@ -3,6 +3,7 @@ library(shinythemes)
 library(ggplot2)
 
 data <- read.csv("data/drug_induced_deaths_1999-2015.csv", stringsAsFactors = FALSE)
+colnames(data)[1] = "state"
 
 source("overdose_map.R")
 source("death_mapcode.R")
@@ -111,7 +112,7 @@ ui <- navbarPage(
 
 server <- function(input, output) {
     output$trendPlot <- renderPlot({
-        df <- data[data$ï..State == input$state, ]
+        df <- data[data$state == input$state, ]
         ggplot(data = data) +
             geom_point(mapping = aes(x = Year, y = Deaths))
     })
