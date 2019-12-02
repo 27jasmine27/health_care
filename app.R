@@ -75,7 +75,12 @@ page_three <- tabPanel(
                   "decrease" = "decrease")
                 ),
         hr(),
-        h5("This is a static text")
+        p("By clicking on the map, we can see the death rate in 2016 and 2017, and the change 
+           rate. "), 
+        p("By chosing different catagory, the color of certain regions will change and 
+           display the seriousness of the heroin overdose accorss the US. "),
+        hr(),
+        p("From this map, we are able to know the areas are most in need of help.")
         ),
     mainPanel(
     leafletOutput("mymap"))
