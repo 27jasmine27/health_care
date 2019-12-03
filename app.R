@@ -129,13 +129,7 @@ server <- function(input, output) {
             colorbar(title = "Overdoses") %>%
             layout(
                 geo = list(scope = "usa"),
-                title = paste0("Opiod Overdoses in 2017 by State (", input$age, ")"),
-                annotations = list(
-                    text = "*White states do not have sufficient data for this age group",
-                    x = 1.1,
-                    y = -0.1,
-                    showarrow = FALSE
-                )
+                title = paste0("Opiod Overdoses in 2017 by State (", input$age, ")")
             )
     })
     
