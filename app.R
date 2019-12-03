@@ -3,6 +3,7 @@ library(shinythemes)
 library(ggplot2)
 
 data <- read.csv("data/drug_induced_deaths_1999-2015.csv", stringsAsFactors = FALSE)
+colnames(data)[1] = "state"
 
 source("overdose_map.R")
 source("death_mapcode.R")
@@ -116,7 +117,7 @@ ui <- navbarPage(
 
 server <- function(input, output) {
     output$trendPlot <- renderPlot({
-        df <- data[data$ï..State == input$state, ]
+        df <- data[data$state == input$state, ]
         ggplot(data = data) +
             geom_point(mapping = aes(x = Year, y = Deaths))
     })
@@ -133,13 +134,7 @@ server <- function(input, output) {
             colorbar(title = "Overdoses") %>%
             layout(
                 geo = list(scope = "usa"),
-                title = paste0("Opiod Overdoses in 2017 by State (", input$age, ")"),
-                annotations = list(
-                    text = "*White states do not have sufficient data for this age group",
-                    x = 1.1,
-                    y = -0.1,
-                    showarrow = FALSE
-                )
+                title = paste0("Opiod Overdoses in 2017 by State (", input$age, ")")
             )
     })
     
