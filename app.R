@@ -1,12 +1,33 @@
 library(shiny)
 library(shinythemes)
 library(ggplot2)
+library(dplyr)
 
-data <- read.csv("data/drug_induced_deaths_1999-2015.csv", stringsAsFactors = FALSE)
-colnames(data)[1] = "state"
+deaths_vs_time <- read.csv(
+    "data/drug_induced_deaths_1999-2015.csv", 
+    stringsAsFactors = FALSE
+    )
+colnames(deaths_vs_time)[1] = "state"
 
 source("overdose_map.R")
 source("death_mapcode.R")
+
+filtered_data <- filter(deaths_vs_time, state == "Washington")
+plot_ly(filtered_data,
+        x = ~Year,
+        y = ~Deaths,
+        type = "scatter")
+
+graph_state <- function(state_name = "Washington", data) {
+    filtered_data <- filter(data, state == state_name)
+    plot_graph <- plot_ly(
+        filtered_data,
+        x = ~Year, y = ~Deaths,
+        type = "scatter",
+        mode = "lines+markers"
+    )
+    return(plot_graph)
+}
 
 homepage <- tabPanel(
     "Overview",
@@ -30,23 +51,9 @@ homepage <- tabPanel(
         )
 )
 
-page_one <- tabPanel(
-    "Numbers of Deaths",
-    titlePanel("Deaths by Drugs in 1999-2015"),
-    sidebarLayout(
-        sidebarPanel(
-            selectizeInput("?..State", 
-                           label = "State:", 
-                           choices = data$State)),
-        
-        mainPanel(
-            plotOutput("trendPlot"))
-    )
-)
 
-page_two <- tabPanel(
+page_one <- tabPanel(
     "Opiod Overdoses by Age Group",
-    titlePanel("Overdose Map"),
     sidebarLayout(
         sidebarPanel(
             radioButtons(inputId = "age", label = h3("Age Range"),
@@ -64,9 +71,24 @@ page_two <- tabPanel(
     )
 )
 
+page_two <- tabPanel(
+    "Deaths Over Time",
+    titlePanel("Deaths by Drugs in 1999-2015"),
+    sidebarLayout(
+        sidebarPanel(
+            selectInput("state", 
+                        label = "State:", 
+                        choices = state.name
+            )
+        ),
+        mainPanel(
+            plotlyOutput("trendPlot"))
+    )
+)
+
 page_three <- tabPanel(
-    "Death Change Rate Map",
-    titlePanel("Heroin-Related Overdose Deaths 2016-2017"),
+    "Death Rate Change Map",
+    titlePanel("Change in Heroin-Related Death Rates 2016-2017"),
     sidebarLayout(
         sidebarPanel(
         selectInput("category", "Category:",
@@ -107,21 +129,16 @@ page_four <- navbarMenu("More",
 
 ui <- navbarPage(
     theme = shinytheme("yeti"),
-    "Drug Usage",
+    "Heroin Usage",
     homepage,
-    page_two,
     page_one,
+    page_two,
     page_three,
     page_four
 )
 
 server <- function(input, output) {
-    output$trendPlot <- renderPlot({
-        df <- data[data$state == input$state, ]
-        ggplot(data = data) +
-            geom_point(mapping = aes(x = Year, y = Deaths))
-    })
-    
+    output$trendPlot <- renderPlotly(graph_state(input$state, deaths_vs_time))
     
     output$overdose_map <- renderPlotly({
         plot_geo(data = overdose_age_groups) %>%
@@ -138,6 +155,7 @@ server <- function(input, output) {
             )
     })
     
+    # death rate change map
     output$mymap <- renderLeaflet({my_map <- leaflet(states) %>%
         setView(-100, 40, 4) %>%
         addProviderTiles("MapBox", options = providerTileOptions(
