@@ -149,20 +149,21 @@ page_five <- tabPanel(
 
 page_six <- tabPanel(
     "Contact Us",
-    br(),
-    p("INFO 201 | Autumn 2019"),
+    mainPanel(
+        h3(class = "title", "Affiliation"),
+        p("Adriane Phi (padriane@uw.edu)"),
+        p("Christian Diangco (diangco@uw.edu)"),
+        p("Jasmine Kennedy (jlk2727@uw.edu)"),
+        p("Jiaxian Xiang (jx57@uw.edu)"),
     hr(),
-    p(
-        "Adriane Phi - phiadriane@gmail.com,
-        Christian Diangco - christiandiangco@gmail.com,
-        Jasmine Kennedy - jlk2727@uw.edu,
-         Jiaxian Xiang - jx57@uw.edu",
-        align = "center"
-    ),
-     p("Link to ", a(strong(code("INFO201-Final-Project")),
-        href = "https://github.com/Jessjx6/health_care"),
+    p("INFO-201A: Technical Foundations of Informatics"),
+    p("The Information School"),
+    p("University of Washington, Autumn 2019"),
+    p("Link to ", a(strong(code("INFO201-Final-Project")),
+        href = "https://github.com/27jasmine27/health_care"),
         align = "center"
      )
+)
 )
 
 ui <- navbarPage(
