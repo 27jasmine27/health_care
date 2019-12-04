@@ -3,7 +3,7 @@ library(plotly)
 library(openintro)
 
 overdose_age_groups <- read.csv(
-  "data/overdose_age_groups_state.csv",
+  "data/overdose_age_groups_state2017.csv",
   stringsAsFactors = FALSE
 )
 colnames(overdose_age_groups) <- c(
