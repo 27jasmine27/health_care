@@ -2,15 +2,15 @@ library(shiny)
 library(shinythemes)
 library(ggplot2)
 library(dplyr)
+source("overdose_map.R")
+source("death_mapcode.R")
+source("overdose_ages.R")
 
 deaths_vs_time <- read.csv(
     "data/drug_induced_deaths_1999-2015.csv", 
     stringsAsFactors = FALSE
-    )
+)
 colnames(deaths_vs_time)[1] = "state"
-
-source("overdose_map.R")
-source("death_mapcode.R")
 
 filtered_data <- filter(deaths_vs_time, state == "Washington")
 plot_ly(filtered_data,
@@ -48,12 +48,12 @@ homepage <- tabPanel(
         p("Lastly, the other map that we used highlights the change in deaths from 
           2016 until now. This is useful because it highlights the severity and 
           growing issue that needs attention and changes to legislation. ")
-        )
+    )
 )
 
 
 page_one <- tabPanel(
-    "Opiod Overdoses by Age Group",
+    "Overdose Map",
     sidebarLayout(
         sidebarPanel(
             radioButtons(inputId = "age", label = h3("Age Range"),
@@ -63,7 +63,8 @@ page_one <- tabPanel(
                                         "Ages 45-54",
                                         "Ages 55+",
                                         "Total"), 
-                         selected = "Total")
+                         selected = "Total"),
+            "*Gray states have no sufficient data for the specified age group"
         ),
         mainPanel(
             plotlyOutput("overdose_map")
@@ -71,7 +72,7 @@ page_one <- tabPanel(
     )
 )
 
-page_two <- tabPanel(
+page_four <- tabPanel(
     "Deaths Over Time",
     titlePanel("Deaths by Drugs in 1999-2015"),
     sidebarLayout(
@@ -91,40 +92,58 @@ page_three <- tabPanel(
     titlePanel("Change in Heroin-Related Death Rates 2016-2017"),
     sidebarLayout(
         sidebarPanel(
-        selectInput("category", "Category:",
-                c("stable - not significant" = "stable - not significant",
-                  "increase" = "increase",
-                  "did not meet inclusion criteria" = "did not meet inclusion criteria",
-                  "decrease" = "decrease")
-                ),
-        hr(),
-        p("By clicking on the map, we can see the death rate in 2016 and 2017, and the change 
+            selectInput("category", "Category:",
+                        c("stable - not significant" = "stable - not significant",
+                          "increase" = "increase",
+                          "did not meet inclusion criteria" = "did not meet inclusion criteria",
+                          "decrease" = "decrease")
+            ),
+            hr(),
+            p("By clicking on the map, we can see the death rate in 2016 and 2017, and the change 
            rate. "), 
-        p("By chosing different catagory, the color of certain regions will change and 
+            p("By chosing different catagory, the color of certain regions will change and 
            display the seriousness of the heroin overdose accorss the US. "),
-        hr(),
-        p("From this map, we are able to know the areas are most in need of help.")
+            hr(),
+            p("From this map, we are able to know the areas are most in need of help.")
         ),
-    mainPanel(
-    leafletOutput("mymap"))
+        mainPanel(
+            leafletOutput("mymap"))
     )
 )
 
-page_four <- navbarMenu("More",
-                        tabPanel("Q&A"),
-                        tabPanel("Contact Us",
-                        br(),
-                        p("INFO 201 | Autumn 2019"),
-                        hr(),
-                        p("Adriane Phi, 
-                          Christian Diangco, 
-                          Jasmine Kennedy, 
-                          Jiaxian Xiang", 
-                          align = "center"),
-                        p("Link to ", a(strong(code("INFO201-Final-Project")), 
-                                        href = "https://github.com/Jessjx6/health_care"), 
-                          align = "center")
-                        )
+page_two <- tabPanel(
+    "Overdoses by Age Group",
+    sidebarLayout(
+        sidebarPanel(
+            radioButtons("year", "Year", choices = c(2017, 2016, 2015)),
+            "*2016 has no sufficient data for certain age groups"
+        ),
+        mainPanel(
+            plotlyOutput("ages_bar")
+        )
+    )
+)
+
+page_five <- tabPanel(
+    "Conclusion"
+)
+
+page_six <- tabPanel(
+    "Contact Us",
+    br(),
+    p("INFO 201 | Autumn 2019"),
+    hr(),
+    p(
+        "Adriane Phi,
+        Christian Diangco,
+        Jasmine Kennedy,
+         Jiaxian Xiang",
+        align = "center"
+    ),
+     p("Link to ", a(strong(code("INFO201-Final-Project")),
+        href = "https://github.com/Jessjx6/health_care"),
+        align = "center"
+     )
 )
 
 ui <- navbarPage(
@@ -134,7 +153,9 @@ ui <- navbarPage(
     page_one,
     page_two,
     page_three,
-    page_four
+    page_four,
+    page_five,
+    page_six
 )
 
 server <- function(input, output) {
@@ -193,6 +214,13 @@ server <- function(input, output) {
             proxy %>% addPolylines(stroke=TRUE, weight = 4, color="red",
                                    data=selected_polygon, group="highlighted_polygon")
         }
+    })
+    
+    # overdose by age group bar chart
+    output$ages_bar <- renderPlotly({
+        ages_df_year <- paste0("overdose_age_groups", input$year)
+        ages_df <- eval(parse(text = ages_df_year)) %>%
+            plot_ages()
     })
 }
 
