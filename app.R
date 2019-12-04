@@ -1,3 +1,4 @@
+#------------Setup-----------
 library(shiny)
 library(shinythemes)
 library(ggplot2)
@@ -18,6 +19,7 @@ plot_ly(filtered_data,
         y = ~Deaths,
         type = "scatter")
 
+# makes the line plot for number of deaths
 graph_state <- function(state_name = "Washington", data) {
     filtered_data <- filter(data, state == state_name)
     plot_graph <- plot_ly(
@@ -29,25 +31,30 @@ graph_state <- function(state_name = "Washington", data) {
     return(plot_graph)
 }
 
+#---------Front End-------------
+
 homepage <- tabPanel(
     "Overview",
     mainPanel(
         h3(class = "title", "Overview"),
+        hr(),
         p("Our Shiny application was built in R Studio and contains 
         the major components used to create the variety of visualizations 
         used to help us answer our research questions."),
         p("To begin, we used a heat map to show the extent of heroin overdoses 
-        in different states, with color to show the amount of people, frequency, 
-        and age. This is particularly useful because it gives a visual aid as 
+        in different states, with color to show the amount of overdoses.
+        This is particularly useful because it gives a visual aid as 
         to where and what groups of people are in most need of help."),
         p("Secondly, the next visualization we used was a bar chart. 
-        This varied from the heat map because it highlights the various ages 
-        of heroin users across the nation. Being able to change the view based 
-        on specific age groups allows the user to see the true and unobscured data,
-        whereas the heat map shows the depth and severity of the problem. "),
-        p("Lastly, the other map that we used highlights the change in deaths from 
+        This varies from the heat map because it highlights the various ages 
+        of heroin users across all of the US. It allows the user to easily see
+          the difference in number of overdoses per age group quickly."),
+        p("Thirdly, the other map that we used highlights the change in deaths from 
           2016 until now. This is useful because it highlights the severity and 
-          growing issue that needs attention and changes to legislation. ")
+          growing issue that needs attention and changes to legislation."),
+        p("Lastly, we created a line plot for the number of heroin-related deaths from
+          1999-2015 for each US state. This allows the user to easily see how the number of
+          lives lost due to drugs has increased or decreased over the years in each state.")
     )
 )
 
@@ -125,7 +132,19 @@ page_two <- tabPanel(
 )
 
 page_five <- tabPanel(
-    "Conclusion"
+    "Conclusion",
+    h3("Conclusion"),
+    hr(),
+    p("Looking at our data, we found that the areas with the most overdose
+      deaths were concentrated on the eastern portion of the US, with the
+      exception of some bigger states like California and Texas. There are
+      not as many overdoses in the middle portion of the country."), 
+    p("We also found that, With the exception of the 55+ age group, the state with the
+      most overdose deaths for each age group was Ohio. The age group with the most overdose deaths
+      was the 25-34 age group. The group with the least was the 0-24 age group."),
+    p("Another finding we had is that for all states, there has been a generally a steady increase
+      in drug-related deaths over the years. From this, we can see that the problem has been getting
+      worse and worse.")
 )
 
 page_six <- tabPanel(
@@ -134,10 +153,10 @@ page_six <- tabPanel(
     p("INFO 201 | Autumn 2019"),
     hr(),
     p(
-        "Adriane Phi,
-        Christian Diangco,
-        Jasmine Kennedy,
-         Jiaxian Xiang",
+        "Adriane Phi - phiadriane@gmail.com,
+        Christian Diangco - christiandiangco@gmail.com,
+        Jasmine Kennedy - jlk2727@uw.edu,
+         Jiaxian Xiang - jx57@uw.edu",
         align = "center"
     ),
      p("Link to ", a(strong(code("INFO201-Final-Project")),
@@ -157,6 +176,8 @@ ui <- navbarPage(
     page_five,
     page_six
 )
+
+#----------Back End-----------
 
 server <- function(input, output) {
     output$trendPlot <- renderPlotly(graph_state(input$state, deaths_vs_time))
