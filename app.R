@@ -133,7 +133,8 @@ page_two <- tabPanel(
 
 page_five <- tabPanel(
     "Conclusion",
-    h3("Conclusion"),
+    mainPanel(
+      h3(class = "title", "Conclusion"),
     hr(),
     p("Looking at our data, we found that the areas with the most overdose
       deaths were concentrated on the eastern portion of the US, with the
@@ -145,6 +146,7 @@ page_five <- tabPanel(
     p("Another finding we had is that for all states, there has been a generally a steady increase
       in drug-related deaths over the years. From this, we can see that the problem has been getting
       worse and worse.")
+    )
 )
 
 page_six <- tabPanel(
