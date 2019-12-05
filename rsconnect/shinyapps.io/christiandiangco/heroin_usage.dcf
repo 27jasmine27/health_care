@@ -5,9 +5,9 @@ account: christiandiangco
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1559223
-bundleId: 2639192
+bundleId: 2642471
 url: https://christiandiangco.shinyapps.io/heroin_usage/
-when: 1575441909.43149
+when: 1575513997.93887
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .RData|README.md|images/.DS_Store|images/2019-11-13 (1).png|images/2019-11-13.png|images/bar_graph.jpg|images/map.jpg
