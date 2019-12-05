@@ -1,0 +1,13 @@
+name: heroin_usage
+title: heroin_usage
+username:
+account: christiandiangco
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1559223
+bundleId: 2639192
+url: https://christiandiangco.shinyapps.io/heroin_usage/
+when: 1575441909.43149
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|README.md|images/.DS_Store|images/2019-11-13 (1).png|images/2019-11-13.png|images/bar_graph.jpg|images/map.jpg
